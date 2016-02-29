@@ -12,8 +12,16 @@ function init(polygraph, options) {
       svg = d3.select(polygraph).append('svg'),
       force = d3.layout.force()
         .linkDistance(60)
-        .charge(-200)
-        .size([$polygraph.innerWidth(), $polygraph.innerHeight()]);
+        .charge(-200);
+
+  resize(force);
+  $(window).on('resize', resize);
+
+  function resize() {
+    force
+      .size([$polygraph.innerWidth(), $polygraph.innerHeight()])
+      .resume();
+  }
 
   $polygraph.data('polygraph', {
     options: options,
@@ -43,7 +51,8 @@ function init(polygraph, options) {
         .attr('class', 'polygraph__node__text')
         .text(function(d) { return d.display; });
 
-    force.on('tick', function() {
+    force.on('tick', tick);
+    function tick() {
       link.attr('x1', function(d) { return d.source.x; })
           .attr('y1', function(d) { return d.source.y; })
           .attr('x2', function(d) { return d.target.x; })
@@ -53,6 +62,6 @@ function init(polygraph, options) {
         function(d){
           return 'translate(' + d.x + ',' + d.y + ')';
         });
-    });
+    }
   });
 }
