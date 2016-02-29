@@ -6,11 +6,16 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "browserify-middleware": "^7.0.0",
+    "d3": "^3.5.16",
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "jade": "~1.11.0",
+    "jquery": "^2.2.1",
     "morgan": "~1.6.1",
+    "postcss-autoreset": "^1.1.5",
     "postcss-cssnext": "~2.4.0",
-    "postcss-middleware": "~1.0.0"
+    "postcss-middleware": "~1.0.0",
+    "precss": "^1.4.0"
   }
 }

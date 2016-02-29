@@ -1,19 +1,10 @@
+var browserify = require('browserify-middleware');
 var express = require('express');
-var path = require('path');
 var logger = require('morgan');
-var postcss = require('postcss-middleware');
-var cssnext = require('postcss-cssnext');
+var path = require('path');
 
+var postcss = require('./lib/css');
 var root = require('./routes/root');
-
-var postcssOptions = {
-  src: function(req) {
-    return path.join('styles', req.path);
-  },
-  plugins: [
-    cssnext
-  ]
-};
 
 var app = express();
 
@@ -22,7 +13,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use('/css', postcss(postcssOptions));
+app.use('/js', browserify('client'));
+app.use('/css', postcss);
 
 app.use('/', root);
 
