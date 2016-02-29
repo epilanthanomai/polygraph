@@ -7,14 +7,22 @@
   }
 }
 
-.polygraph__node {
+.polygraph__node__circle {
   stroke: #fff;
-  fill: #666;
-  stroke-width: 1.5px;
+  fill: #2c0;
+  stroke-width: 3px;
+}
+
+.polygraph__node__text {
+  text-anchor: middle;
+  alignment-baseline: middle;
+  cursor: default;
+  font-family: sans-serif;
+  font-weight: bold;
 }
 
 .polygraph__link {
   stroke: #999;
   stroke-opacity: .6;
-  stroke-width: 1.5px;
+  stroke-width: 3px;
 }

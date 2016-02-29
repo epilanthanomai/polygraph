@@ -11,6 +11,8 @@ function init(polygraph, options) {
   var $polygraph = $(polygraph),
       svg = d3.select(polygraph).append('svg'),
       force = d3.layout.force()
+        .linkDistance(60)
+        .charge(-200)
         .size([$polygraph.innerWidth(), $polygraph.innerHeight()]);
 
   $polygraph.data('polygraph', {
@@ -29,14 +31,16 @@ function init(polygraph, options) {
       .enter().append('line')
         .attr('class', 'polygraph__link');
 
-    var node = svg.selectAll('.polygraph__node')
+    var nodeGroup = svg.selectAll('.polygraph__node')
         .data(graph.nodes)
-      .enter().append('circle')
+      .enter().append('g')
         .attr('class', 'polygraph__node')
-        .attr('r', 5)
         .call(force.drag);
-
-    node.append('title')
+    nodeGroup.append('circle')
+        .attr('class', 'polygraph__node__circle')
+        .attr('r', 20);
+    nodeGroup.append('text')
+        .attr('class', 'polygraph__node__text')
         .text(function(d) { return d.display; });
 
     force.on('tick', function() {
@@ -45,8 +49,10 @@ function init(polygraph, options) {
           .attr('x2', function(d) { return d.target.x; })
           .attr('y2', function(d) { return d.target.y; });
 
-      node.attr('cx', function(d) { return d.x; })
-          .attr('cy', function(d) { return d.y; });
+      nodeGroup.attr('transform',
+        function(d){
+          return 'translate(' + d.x + ',' + d.y + ')';
+        });
     });
   });
 }
