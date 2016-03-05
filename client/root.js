@@ -1,7 +1,7 @@
 global.jQuery = require('jquery');
 require('./polygraph');
 
-var graphPath = '/graph.json';
+var graphPath = '/polygraph/graph.json';
 
 jQuery(function($) {
   $('.polygraph').polygraph({

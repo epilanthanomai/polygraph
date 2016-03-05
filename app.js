@@ -1,3 +1,5 @@
+"use strict"
+
 var browserify = require('browserify-middleware');
 var express = require('express');
 var logger = require('morgan');
@@ -13,10 +15,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use('/js', browserify('client'));
-app.use('/css', postcss);
 
-app.use('/', root);
+var app_route = express.Router();
+
+app.use('/polygraph', app_route);
+app.get('/', function(req, res) {
+  res.redirect('/polygraph');
+});
+
+app_route.use('/js', browserify('client'));
+app_route.use('/css', postcss);
+app_route.use('/', root);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
