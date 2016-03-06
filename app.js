@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
   res.redirect('/polygraph');
 });
 
-app_route.use('/js', browserify('client'));
+app_route.use('/js', browserify(path.join(__dirname, 'client')));
 app_route.use('/css', postcss);
 app_route.use('/', root);
 
