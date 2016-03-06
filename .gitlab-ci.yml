@@ -2,7 +2,7 @@ before_script:
   - npm install
 
 package:
-  script: npm package
+  script: npm pack
   artifacts:
     paths:
        - polygraph-*.tgz
