@@ -1,22 +1,12 @@
+"use strict"
+
+var browserify = require('browserify-middleware');
 var express = require('express');
-var path = require('path');
-//var favicon = require('serve-favicon');
 var logger = require('morgan');
-//var cookieParser = require('cookie-parser');
-//var bodyParser = require('body-parser');
-var postcss = require('postcss-middleware');
-var cssnext = require('postcss-cssnext');
+var path = require('path');
 
+var postcss = require('./lib/css');
 var root = require('./routes/root');
-
-var postcssOptions = {
-  src: function(req) {
-    return path.join('styles', req.path);
-  },
-  plugins: [
-    cssnext
-  ]
-};
 
 var app = express();
 
@@ -24,15 +14,18 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser());
-//app.use(express.static(path.join(__dirname, 'public')));
-app.use('/css', postcss(postcssOptions));
 
-app.use('/', root);
+var app_route = express.Router();
+
+app.use('/polygraph', app_route);
+app.get('/', function(req, res) {
+  res.redirect('/polygraph');
+});
+
+app_route.use('/js', browserify(path.join(__dirname, 'client')));
+app_route.use('/css', postcss);
+app_route.use('/', root);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
