@@ -1,0 +1,11 @@
+before_script:
+  - npm install
+
+package:
+  script: npm package
+  artifacts:
+    paths:
+       - polygraph-*.tgz
+  cache:
+    paths:
+      - node_modules/
