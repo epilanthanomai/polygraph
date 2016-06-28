@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+'use strict';
+
+var models = require('../models/index');
+var graph = require('../graph.json');
+var people = {};
+
+var nodes = graph.nodes.map((node) => {
+  return models.Person.findOrCreate({
+    where: { name: node.name },
+    defaults: { display: node.display }
+  }).spread((person) => {
+    people[node.name] = person;
+  });
+});
+
+Promise.all(nodes).then(() => {
+  return graph.links.map((link) => {
+    var a = people[link[0]],
+        b = people[link[1]];
+    return models.Link.findOrCreate({
+      where: {
+        personAId: a.id,
+        personBId: b.id
+      }});
+  });
+});
