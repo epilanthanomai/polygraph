@@ -1,6 +1,6 @@
 {
   "name": "polygraph",
-  "version": "0.0.2-dev",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
