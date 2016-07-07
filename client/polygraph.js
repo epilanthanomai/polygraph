@@ -1,69 +1,120 @@
 var d3 = require('d3');
 
-function Polygraph({ rootSelector, graphPath }) {
-  this.rootSelector = rootSelector;
-  this.graphPath = graphPath;
+var defaultOptions = {
+  graphPath: null,
+
+  rootSelector: '.polygraph',
+  linkClass: 'polygraph__link',
+  nodeClass: 'polygraph__node',
+  nodeCircleClass: 'polygraph__node__circle',
+  nodeTextClass: 'polygraph__node__text',
+
+  linkDistance: 60,
+  linkCharge: -200,
+  nodeRadius: 20
+};
+
+function Polygraph(userOptions) {
+  this.options = extend({}, defaultOptions, userOptions);
+  this.rootNode = d3.select(this.options.rootSelector);
+
+  d3.json(this.options.graphPath, this.dataLoaded.bind(this));
+};
+
+// We have data. Init what we can of the sim.
+
+Polygraph.prototype.dataLoaded = function(error, graph) {
+  this.graph = graph;
+
+  this.initSimulation();
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', self.domLoaded.bind(this));
+    document.addEventListener('DOMContentLoaded', this.domLoaded.bind(this));
   } else {
     this.domLoaded();
   }
-}
+};
+
+Polygraph.prototype.initSimulation = function() {
+  this.simulation = d3.layout.force()
+        .linkDistance(this.options.linkDistance)
+        .charge(this.options.linkCharge);
+  this.simulation
+    .nodes(this.graph.nodes)
+    .links(this.graph.links);
+  this.setSize();
+};
+
+// We have DOM. Configure it and start the sim.
 
 Polygraph.prototype.domLoaded = function() {
-  this.svg = d3.select(this.rootSelector).append('svg');
-  this.force = d3.layout.force()
-        .linkDistance(60)
-        .charge(-200);
+  this.initDom();
+  this.registerHandlers();
+  this.simulation.start();
+};
 
-  this.resize();
+Polygraph.prototype.initDom = function() {
+  this.svg = this.rootNode.append('svg');
+
+  this.link = this.svg.selectAll('.' + this.options.linkClass)
+      .data(this.graph.links)
+    .enter().append('line')
+      .attr('class', this.options.linkClass);
+
+  this.nodeGroup = this.svg.selectAll('.' + this.options.nodeClass)
+      .data(this.graph.nodes)
+    .enter().append('g')
+      .attr('class', this.options.nodeClass);
+  this.nodeGroup.append('circle')
+          .attr({
+            'class': this.options.nodeCircleClass,
+            r: this.options.nodeRadius
+          });
+  this.nodeGroup.append('text')
+          .attr('class', this.options.nodeTextClass)
+          .text(function(d) { return d.display; });
+};
+
+Polygraph.prototype.registerHandlers = function() {
+  this.nodeGroup.call(this.simulation.drag);
   d3.select(window).on('resize', this.resize.bind(this));
-  d3.json(this.graphPath, this.dataLoaded.bind(this));
+  this.simulation.on('tick', this.tick.bind(this));
 };
 
 Polygraph.prototype.resize = function() {
-  this.force
-    .size([window.innerWidth, window.innerHeight])
-    .resume();
+  this.setSize();
+  this.simulation.resume();
 };
 
-Polygraph.prototype.dataLoaded = function(error, graph) {
-  this.force
-    .nodes(graph.nodes)
-    .links(graph.links)
-    .start();
-
-  this.link = this.svg.selectAll('.polygraph__link')
-      .data(graph.links)
-    .enter().append('line')
-      .attr('class', 'polygraph__link');
-
-  this.nodeGroup = this.svg.selectAll('.polygraph__node')
-      .data(graph.nodes)
-    .enter().append('g')
-      .attr('class', 'polygraph__node')
-      .call(this.force.drag);
-  this.nodeGroup.append('circle')
-          .attr('class', 'polygraph__node__circle')
-          .attr('r', 20);
-  this.nodeGroup.append('text')
-          .attr('class', 'polygraph__node__text')
-          .text(function(d) { return d.display; });
-
-  this.force.on('tick', this.tick.bind(this));
+Polygraph.prototype.setSize = function() {
+  this.simulation.size([window.innerWidth, window.innerHeight]);
 };
 
 Polygraph.prototype.tick = function() {
-  this.link.attr('x1', function(d) { return d.source.x; })
-           .attr('y1', function(d) { return d.source.y; })
-           .attr('x2', function(d) { return d.target.x; })
-           .attr('y2', function(d) { return d.target.y; });
+  this.link.attr({
+    x1: function(d) { return d.source.x; },
+    y1: function(d) { return d.source.y; },
+    x2: function(d) { return d.target.x; },
+    y2: function(d) { return d.target.y; }
+  });
 
   this.nodeGroup.attr('transform',
-    function(d){
+    function(d) {
       return 'translate(' + d.x + ',' + d.y + ')';
     });
 };
+
+// Poor-man's _.extend until we use enough lodash to actually require it
+function extend(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+    for (key in source) {
+      if (source.hasOwnProperty(key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
+}
 
 module.exports = Polygraph;
