@@ -12,7 +12,7 @@ var defaultOptions = {
   linkDistance: 60,
   linkCharge: -200,
   nodeRadius: 20,
-  restartAlphaTarget: 0.3
+  restartAlpha: 0.1
 };
 
 function Polygraph(userOptions) {
@@ -94,7 +94,7 @@ Polygraph.prototype.dragSubject = function() {
 Polygraph.prototype.dragStart = function() {
   d3.event.subject.fx = d3.event.subject.x;
   d3.event.subject.fy = d3.event.subject.y;
-  this.simulation.alphaTarget(this.options.restartAlphaTarget).restart();
+  this.simulation.alpha(this.options.restartAlpha).restart();
 };
 
 Polygraph.prototype.dragMoved = function() {
