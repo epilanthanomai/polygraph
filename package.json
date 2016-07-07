@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "browserify-middleware": "^7.0.0",
-    "d3": "^3.5.16",
+    "d3": "^4.1.0",
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "jade": "~1.11.0",
