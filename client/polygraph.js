@@ -39,7 +39,8 @@ Polygraph.prototype.dataLoaded = function(error, graph) {
 Polygraph.prototype.initSimulation = function() {
   this.simulation = d3.forceSimulation(this.graph.nodes)
     .force('link', d3.forceLink(this.graph.links)
-          .distance(this.options.linkDistance))
+          .distance(this.options.linkDistance)
+          .id(function(node) { return node.id; }))
     .force('charge', d3.forceManyBody()
           .strength(this.options.linkCharge))
     .force('gravityx', d3.forceX())

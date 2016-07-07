@@ -24,31 +24,16 @@ router.get('/graph.json', function(req, res, next) {
 });
 
 function createGraph(people, links) {
-  var nodeList = [],
-      nodeMap = {};
-
-  for (var i = 0; i < people.length; i++) {
-    var person = people[i],
-        node = {
-          index: i,
-          id: person.id,
-          display: person.display
-        };
-    nodeList.push(node);
-    nodeMap[person.id] = i;
-  }
-
-  var linkList = links.map((link) => {
-    return {
-      id: link.id,
-      source: nodeMap[link.personAId],
-      target: nodeMap[link.personBId]
-    };
-  });
-
   return {
-    nodes: nodeList,
-    links: linkList
+    nodes: people.map((person) => {
+             id: person.id,
+             display: person.display
+           }),
+    links: links.map((link) => {
+             id: link.id,
+             source: link.personAId,
+             target: link.personBId
+           })
   };
 }
 
