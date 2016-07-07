@@ -1,34 +1,21 @@
-global.jQuery = require('jquery');
-
-var $ = jQuery;
 var d3 = require('d3');
 
-$.fn.polygraph = function(options) {
-  this.each(function() { init(this, options); });
-}
-
-function init(polygraph, options) {
-  var $polygraph = $(polygraph),
-      svg = d3.select(polygraph).append('svg'),
+exports.init = ({ rootSelector, graphPath }) => {
+  var svg = d3.select(rootSelector).append('svg')
       force = d3.layout.force()
         .linkDistance(60)
         .charge(-200);
 
   resize(force);
-  $(window).on('resize', resize);
+  d3.select(window).on('resize', resize);
 
   function resize() {
     force
-      .size([$polygraph.innerWidth(), $polygraph.innerHeight()])
+      .size([window.innerWidth, window.innerHeight])
       .resume();
   }
 
-  $polygraph.data('polygraph', {
-    options: options,
-    force: force
-  });
-
-  d3.json(options.graphPath, function(error, graph) {
+  d3.json(graphPath, function(error, graph) {
     force
       .nodes(graph.nodes)
       .links(graph.links)

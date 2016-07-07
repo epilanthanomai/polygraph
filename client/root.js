@@ -1,10 +1,14 @@
-global.jQuery = require('jquery');
-require('./polygraph');
+var polygraph = require('./polygraph');
 
-var graphPath = '/polygraph/graph.json';
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', domLoaded);
+} else {
+  domLoaded();
+}
 
-jQuery(function($) {
-  $('.polygraph').polygraph({
-    graphPath: graphPath
+function domLoaded() {
+  polygraph.init({
+    rootSelector: '.polygraph',
+    graphPath: '/polygraph/graph.json'
   });
-});
+}
