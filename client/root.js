@@ -1,14 +1,6 @@
-var polygraph = require('./polygraph');
+var Polygraph = require('./polygraph');
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', domLoaded);
-} else {
-  domLoaded();
-}
-
-function domLoaded() {
-  polygraph.init({
-    rootSelector: '.polygraph',
-    graphPath: '/polygraph/graph.json'
-  });
-}
+var polygraph = new Polygraph({
+  rootSelector: '.polygraph',
+  graphPath: '/polygraph/graph.json'
+});
