@@ -122,10 +122,11 @@ Polygraph.prototype.click = function(elt, d) {
   if (d3.event.defaultPrevented) {
     return;
   }
+  this.deselect();
   this.select(elt, d);
-  
 };
 
+Polygraph.prototype.select = function(elt, d) {
   d3.select(elt).classed(this.options.selectedClass, true);
   this.selected = {
     elt: elt,

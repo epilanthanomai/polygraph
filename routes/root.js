@@ -26,14 +26,18 @@ router.get('/graph.json', function(req, res, next) {
 function createGraph(people, links) {
   return {
     nodes: people.map((person) => {
-             id: person.id,
-             display: person.display
+             return {
+               id: person.id,
+               display: person.display
+             };
            }),
     links: links.map((link) => {
-             id: link.id,
-             source: link.personAId,
-             target: link.personBId
-           })
+             return {
+               id: link.id,
+               source: link.personAId,
+               target: link.personBId
+            };
+          })
   };
 }
 
