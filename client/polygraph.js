@@ -8,6 +8,7 @@ var defaultOptions = {
   nodeClass: 'polygraph__node',
   nodeCircleClass: 'polygraph__node__circle',
   nodeTextClass: 'polygraph__node__text',
+  selectedClass: 'selected',
 
   linkDistance: 60,
   linkCharge: -200,
@@ -18,6 +19,7 @@ var defaultOptions = {
 function Polygraph(userOptions) {
   this.options = extend({}, defaultOptions, userOptions);
   this.rootNode = d3.select(this.options.rootSelector);
+  this.selected = null;
 
   d3.json(this.options.graphPath, this.dataLoaded.bind(this));
 };
@@ -76,14 +78,23 @@ Polygraph.prototype.initDom = function() {
 };
 
 Polygraph.prototype.registerHandlers = function() {
+  var self = this;
+
+  d3.select(window).on('resize', this.setSize.bind(this));
+
+  /* Distinguish between click and drag.
+   * See: http://bl.ocks.org/mbostock/a84aeb78fea81e1ad806 */
+  this.svg.on('touchstart', function() { d3.event.preentDefault(); });
+  this.svg.on('touchmove', function() { d3.event.preentDefault(); });
+
   this.svg.call(d3.drag()
       .subject(this.dragSubject.bind(this))
       .on('start', this.dragStart.bind(this))
       .on('drag', this.dragMoved.bind(this))
-      .on('end', this.dragEnd.bind(this)))
+      .on('end', this.dragEnd.bind(this)));
 
   this.simulation.on('tick', this.tick.bind(this));
-  d3.select(window).on('resize', this.setSize.bind(this));
+  this.nodeGroup.on('click', function(d) { return self.click(this, d); });
 };
 
 Polygraph.prototype.dragSubject = function() {
@@ -106,6 +117,28 @@ Polygraph.prototype.dragEnd = function() {
   d3.event.subject.fx = null;
   d3.event.subject.fy = null;
 };
+
+Polygraph.prototype.click = function(elt, d) {
+  if (d3.event.defaultPrevented) {
+    return;
+  }
+  this.select(elt, d);
+  
+};
+
+  d3.select(elt).classed(this.options.selectedClass, true);
+  this.selected = {
+    elt: elt,
+    d: d
+  };
+}
+
+Polygraph.prototype.deselect = function() {
+  if (this.selected) {
+    d3.select(this.selected.elt).classed(this.options.selectedClass, false);
+    this.selected = null;
+  }
+}
 
 Polygraph.prototype.px2sim = function(x, y) {
   return {
