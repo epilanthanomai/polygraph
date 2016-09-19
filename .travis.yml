@@ -1,2 +1,5 @@
 language: node_js
 script: npm pack
+addons:
+  artifacts: true
+    paths: $(ls polygraph-*.tgz)
