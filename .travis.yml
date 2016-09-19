@@ -1,6 +1,18 @@
 language: node_js
 script: npm pack
-addons:
-  artifacts:
-    paths:
-      - $(ls polygraph-*.tgz)
+
+# It seems like this shouldn't be necessary, but for some reason I just
+# can't seem to get npm pack to build in an alternate directory or travis s3
+# deploy to upload a single file in the root directory. Harrumph.
+before_deploy:
+  - mkdir -p build
+  - mv polygraph-*.tgz build
+
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: $AWS_BUCKET
+  skip_cleanup: true
+
+  local_dir: build
