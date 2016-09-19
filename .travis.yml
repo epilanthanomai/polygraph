@@ -16,8 +16,5 @@ deploy:
   skip_cleanup: true
   local_dir: build
 
-  # only upload my own repo to s3 (tweak it if you want to fork and keep
-  # your own builds
-  repo: epilanthanomai/polygraph
-  # but keep all branches
+  # explicitly keep all branches
   all_branches: true
