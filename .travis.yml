@@ -14,5 +14,10 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: $AWS_BUCKET
   skip_cleanup: true
-
   local_dir: build
+
+  # only upload my own repo to s3 (tweak it if you want to fork and keep
+  # your own builds
+  repo: epilanthanomai/polygraph
+  # but keep all branches
+  all_branches: true
