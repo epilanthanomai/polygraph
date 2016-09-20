@@ -6,7 +6,9 @@ script: npm pack
 # deploy to upload a single file in the root directory. Harrumph.
 before_deploy:
   - mkdir -p build
-  - mv polygraph-*.tgz build
+  - if [ -z "$TRAVIS_TAG" ]; then artifact_tag=-b$TRAVIS_BUILD_NUMBER; fi
+  - artifact=$(ls polygraph-*.tgz)
+  - cp $artifact build/${artifact%.tgz}$artifact_tag.tgz
 
 deploy:
   provider: s3
