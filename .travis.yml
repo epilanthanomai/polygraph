@@ -22,3 +22,6 @@ deploy:
     repo: epilanthanomai/polygraph
     # but keep all branches
     all_branches: true
+
+notifications:
+  email: false
