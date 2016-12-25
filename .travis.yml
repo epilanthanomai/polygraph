@@ -1,0 +1,24 @@
+sudo: required  # for docker
+services:
+  - docker
+
+script:
+  - docker build -f docker/Dockerfile -t polygraph .
+
+after_success:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - if [ "$TRAVIS_BRANCH" == develop -a "$TRAVIS_PULL_REQUEST" == false ]; then
+      docker tag polygraph epilanthanomai/polygraph:dev;
+      docker push epilanthanomai/polygraph:dev;
+    fi
+  - if [ "$TRAVIS_BRANCH" == master ]; then
+      docker tag polygraph epilanthanomai/polygraph;
+      docker push epilanthanomai/polygraph;
+    fi
+  - if [ -n "$TRAVIS_TAG" ]; then
+      docker tag polygraph epilanthanomai/polygraph:$TRAVIS_TAG;
+      docker push epilanthanomai/polygraph:$TRAVIS_TAG;
+    fi
+
+notifications:
+  email: false
