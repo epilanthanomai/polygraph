@@ -1,5 +1,4 @@
 sudo: required  # for docker
-language: node_js
 services:
   - docker
 
