@@ -1,29 +1,20 @@
-language: node_js
-script: npm pack
+sudo: required  # for docker
+services:
+  - docker
 
-# It seems like this shouldn't be necessary, but for some reason I just
-# can't seem to get npm pack to build in an alternate directory or travis s3
-# deploy to upload a single file in the root directory. Harrumph.
-before_deploy:
-  - mkdir -p build
-  - if [ -z "$TRAVIS_TAG" ]; then artifact_tag=-b$TRAVIS_BUILD_NUMBER; fi
-  - artifact=$(ls polygraph-*.tgz)
-  - cp $artifact build/${artifact%.tgz}$artifact_tag.tgz
+script:
+  - docker build -f docker/Dockerfile -t polygraph .
 
-deploy:
-  provider: s3
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  bucket: $AWS_BUCKET
-  skip_cleanup: true
-  local_dir: build
-
-  on:
-    # only upload my own repo to s3 (tweak it if you want to fork and keep
-    # your own builds
-    repo: epilanthanomai/polygraph
-    # but keep all branches
-    all_branches: true
+after_success:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - if [ "$TRAVIS_BRANCH" == develop ]; then
+      docker tag polygraph epilanthanomai/polygraph:dev;
+      docker push epilanthanomai/polygraph:dev;
+    fi
+  - if [ "$TRAVIS_BRANCH" == master ]; then
+      docker tag polygraph epilanthanomai/polygraph;
+      docker push epilanthanomai/polygraph;
+    fi
 
 notifications:
   email: false
