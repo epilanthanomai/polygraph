@@ -1,6 +1,6 @@
 {
   "name": "polygraph",
-  "version": "0.0.3-dev",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "migrate": "node_modules/.bin/sequelize db:migrate --url $POLYGRAPH_DB",
