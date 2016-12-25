@@ -15,6 +15,10 @@ after_success:
       docker tag polygraph epilanthanomai/polygraph;
       docker push epilanthanomai/polygraph;
     fi
+  - if [ -n "$TRAVIS_TAG" ]; then
+      docker tag polygraph epilanthanomai/polygraph:$TRAVIS_TAG;
+      docker push epilanthanomai/polygraph:$TRAVIS_TAG;
+    fi
 
 notifications:
   email: false
