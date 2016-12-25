@@ -8,12 +8,12 @@ script:
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - if [ "$TRAVIS_BRANCH" == develop ]; then
-      docker tag polygraph epilanthanomai/polygraph:dev
-      docker push epilanthanomai/polygraph:dev
+      docker tag polygraph epilanthanomai/polygraph:dev;
+      docker push epilanthanomai/polygraph:dev;
     fi
   - if [ "$TRAVIS_BRANCH" == master ]; then
-      docker tag polygraph epilanthanomai/polygraph
-      docker push epilanthanomai/polygraph
+      docker tag polygraph epilanthanomai/polygraph;
+      docker push epilanthanomai/polygraph;
     fi
 
 notifications:
