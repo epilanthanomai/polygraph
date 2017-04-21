@@ -1,10 +1,5 @@
-global.jQuery = require('jquery');
-require('./polygraph');
+var Polygraph = require('./polygraph');
 
-var graphPath = '/polygraph/graph.json';
-
-jQuery(function($) {
-  $('.polygraph').polygraph({
-    graphPath: graphPath
-  });
+var polygraph = new Polygraph({
+  graphPath: '/polygraph/graph.json'
 });
