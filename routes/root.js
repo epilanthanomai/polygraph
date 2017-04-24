@@ -6,10 +6,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('root', {
-    title: 'polygraph',
-    fullpage: true,
-  });
+  res.sendFile('../build/html/root.html');
 });
 
 router.get('/graph.json', function(req, res, next) {
