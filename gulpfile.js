@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const browserify = require('gulp-browserify');
-const uglify = require('gulp-uglifyjs');
+const uglify = require('gulp-uglify');
 const postcss = require('./lib/css');
 
 gulp.task('js', () => {
