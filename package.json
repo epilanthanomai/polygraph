@@ -12,12 +12,12 @@
     "d3": "^4.1.0",
     "debug": "~2.2.0",
     "express": "~4.13.1",
-    "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "pg": "^4.5.1",
     "postcss-autoreset": "^1.1.5",
     "postcss-cssnext": "~2.4.0",
     "precss": "^1.4.0",
+    "pug": "^2.0.0-beta.12",
     "sequelize": "^3.19.3",
     "sequelize-cli": "^2.3.1"
   },
