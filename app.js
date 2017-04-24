@@ -1,11 +1,9 @@
 "use strict"
 
-var browserify = require('browserify-middleware');
 var express = require('express');
 var logger = require('morgan');
 var path = require('path');
 
-var postcss = require('./lib/css');
 var root = require('./routes/root');
 
 var app = express();
@@ -23,8 +21,8 @@ app.get('/', function(req, res) {
   res.redirect('/polygraph');
 });
 
-app_route.use('/js', browserify(path.join(__dirname, 'client')));
-app_route.use('/css', postcss);
+app_route.use('/js', express.static('build/js'));
+app_route.use('/css', express.static('build/css'));
 app_route.use('/', root);
 
 // catch 404 and forward to error handler

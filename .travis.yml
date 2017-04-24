@@ -3,6 +3,8 @@ services:
   - docker
 
 script:
+  - npm install
+  - npm run build
   - docker build -f docker/Dockerfile -t polygraph .
 
 after_success:

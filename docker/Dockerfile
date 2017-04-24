@@ -6,7 +6,7 @@ ENV POLYGRAPH_HOME /opt/polygraph
 
 COPY . $POLYGRAPH_HOME
 WORKDIR $POLYGRAPH_HOME
-RUN npm install
+RUN npm install --production
 
 CMD ["npm", "start"]
 EXPOSE 3000
